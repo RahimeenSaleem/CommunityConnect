@@ -1,0 +1,74 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model CommunityResourceAssistant.Models.Resource
+
+<div class="resource-profile">
+    <div class="profile-header">
+        <div>
+            <h1>@Model.Name</h1>
+
+            @if (Model.IsVerified)
+            {
+                <span class="verified-badge">Verified Community Partner</span>
+            }
+        </div>
+
+        <span class="badge-category">
+            @Model.Category
+        </span>
+    </div>
+
+    <div class="profile-grid">
+        <div class="profile-item">
+            <strong>Status</strong>
+            <p>@Model.Status</p>
+        </div>
+
+        <div class="profile-item">
+            <strong>Availability</strong>
+            <p>@Model.Availability</p>
+        </div>
+
+        <div class="profile-item">
+            <strong>City</strong>
+            <p>@Model.City</p>
+        </div>
+
+        <div class="profile-item">
+            <strong>Hours</strong>
+            <p>@Model.Hours</p>
+        </div>
+
+        <div class="profile-item">
+            <strong>Languages</strong>
+            <p>@Model.Languages</p>
+        </div>
+
+        <div class="profile-item">
+            <strong>Last Updated</strong>
+            <p>@Model.LastUpdated</p>
+        </div>
+
+        <div class="profile-item">
+            <strong>Contact</strong>
+            <p>@Model.ContactInfo</p>
+        </div>
+
+        <div class="profile-item">
+            <strong>Website</strong>
+            <p>@Model.Website</p>
+        </div>
+    </div>
+
+    <div class="profile-description">
+        <h3>Description</h3>
+        <p>@Model.Description</p>
+    </div>
+
+    <a class="btn-secondary-custom" href="/Resource">
+        Back to Resources
+    </a>
+</div>

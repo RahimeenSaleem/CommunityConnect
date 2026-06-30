@@ -1,0 +1,98 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model CommunityResourceAssistant.Models.Resource
+
+<div class="page-header">
+    <h1>Add Community Partner</h1>
+    <p>Add a verified community organization to the resource directory.</p>
+</div>
+
+<div class="form-box">
+    <form method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Partner Name</label>
+            <input class="form-control-custom" name="Name" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select class="form-control-custom" name="Category">
+                <option value="Food">Food</option>
+                <option value="Housing">Housing</option>
+                <option value="Employment">Employment</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Legal Aid">Legal Aid</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input class="form-control-custom" name="Description" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Contact Information</label>
+            <input class="form-control-custom" name="ContactInfo" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">City</label>
+            <input class="form-control-custom" name="City" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Hours</label>
+            <input class="form-control-custom" name="Hours" placeholder="Mon - Fri | 9:00 AM - 5:00 PM" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Website</label>
+            <input class="form-control-custom" name="Website" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Languages</label>
+            <input class="form-control-custom" name="Languages" placeholder="English, Spanish" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-control-custom" name="Status">
+                <option value="Open Today">Open Today</option>
+                <option value="Open 24 Hours">Open 24 Hours</option>
+                <option value="Currently Closed">Currently Closed</option>
+                <option value="Limited Availability">Limited Availability</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Availability</label>
+            <select class="form-control-custom" name="Availability">
+                <option value="Walk-ins Welcome">Walk-ins Welcome</option>
+                <option value="Appointment Required">Appointment Required</option>
+                <option value="Emergency Services Available">Emergency Services Available</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Last Updated</label>
+            <input class="form-control-custom" name="LastUpdated" value="June 2026" />
+        </div>
+
+        <div class="mb-3">
+            <input type="checkbox" name="IsVerified" value="true" checked />
+            <label>Verified Community Partner</label>
+        </div>
+
+        <button class="btn-main" type="submit">Save Partner</button>
+
+        <a class="btn-secondary-custom" href="/Resource">
+            Cancel
+        </a>
+
+    </form>
+</div>

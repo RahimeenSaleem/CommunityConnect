@@ -1,0 +1,140 @@
+﻿<div class="page-header">
+    <h1>Community Intake</h1>
+    <p>
+        Capture a person’s situation and generate referral recommendations from trusted local resources.
+    </p>
+</div>
+
+<div class="form-box">
+    <form method="post" action="/Ai/Ask">
+
+        <div class="mb-3">
+            <label class="form-label">Who needs help?</label>
+            <select class="form-control-custom" name="personType">
+                <option value="Individual">Individual</option>
+                <option value="Family">Family</option>
+                <option value="Senior">Senior</option>
+                <option value="Student">Student</option>
+                <option value="Veteran">Veteran</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Main situation</label>
+            <input class="form-control-custom"
+                   name="situation"
+                   placeholder="Example: Lost job and struggling to pay rent" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Urgency</label>
+            <select class="form-control-custom" name="urgency">
+                <option value="Today">Today</option>
+                <option value="This week">This week</option>
+                <option value="This month">This month</option>
+                <option value="Not urgent">Not urgent</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Additional details</label>
+            <textarea class="form-control-custom"
+                      name="details"
+                      rows="5"
+                      placeholder="Example: Also needs groceries and help with utilities"></textarea>
+        </div>
+
+        <button class="btn-main" type="submit">
+            Generate Recommendations
+        </button>
+    </form>
+</div>
+
+@if (ViewBag.Situation != null)
+{
+    <div class="page-header mt-4">
+        <h2>Referral Summary</h2>
+        <p><strong>Client type:</strong> @ViewBag.PersonType</p>
+        <p><strong>Urgency:</strong> @ViewBag.Urgency</p>
+        <p><strong>Situation:</strong> @ViewBag.Situation</p>
+
+        @if (!string.IsNullOrEmpty(ViewBag.Details))
+        {
+            <p><strong>Details:</strong> @ViewBag.Details</p>
+        }
+    </div>
+
+    @if (ViewBag.Categories.Count == 0)
+    {
+        <div class="empty-state mt-4">
+            <h3>No recommendation generated</h3>
+            <p>
+                Try adding details related to food, housing, employment, healthcare, or legal support.
+            </p>
+        </div>
+    }
+    else
+    {
+        <div class="page-header mt-4">
+            <h2>Recommended Support Areas</h2>
+
+            @for (int i = 0; i < ViewBag.Categories.Count; i++)
+            {
+                <div class="recommendation-reason">
+                    <span class="badge-category">
+                        @ViewBag.Categories[i]
+                    </span>
+
+                    <p>
+                        @ViewBag.Reasons[i]
+                    </p>
+                </div>
+            }
+        </div>
+
+        @if (ViewBag.MatchingResources.Count == 0)
+        {
+            <div class="empty-state mt-4">
+                <h3>No resources found yet</h3>
+                <p>
+                    Add resources for the recommended support areas, then try again.
+                </p>
+            </div>
+        }
+        else
+        {
+            <h2 class="mt-4 mb-3">Recommended Resources</h2>
+
+            @foreach (var item in ViewBag.MatchingResources)
+            {
+                <div class="card-box">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h3>@item.Name</h3>
+
+                            @if (item.IsVerified)
+                            {
+                                <span class="verified-badge">Verified Partner</span>
+                            }
+                        </div>
+
+                        <span class="badge-category">
+                            @item.Category
+                        </span>
+                    </div>
+
+                    <p class="mt-3">@item.Description</p>
+
+                    <p><strong>Status:</strong> @item.Status</p>
+                    <p><strong>Availability:</strong> @item.Availability</p>
+                    <p><strong>City:</strong> @item.City</p>
+                    <p><strong>Contact:</strong> @item.ContactInfo</p>
+
+                    <a class="btn-secondary-custom" href="/Resource/Details/@item.Id">
+                        View Profile
+                    </a>
+                </div>
+            }
+        }
+    }
+}

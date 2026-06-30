@@ -1,0 +1,119 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<CommunityResourceAssistant.Models.Resource>
+
+<div class="page-header">
+    <h1>Resource Dashboard</h1>
+    <p>
+        Manage verified local support services and help staff quickly find trusted referrals.
+    </p>
+
+    <a class="btn-main" href="/Resource/Create">Add Resource</a>
+    <a class="btn-secondary-custom" href="/Ai">Open Community Intake</a>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <h4>@Model.Count</h4>
+            <p>Total Resources</p>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card">
+            <h4>@Model.Count(r => r.IsVerified)</h4>
+            <p>Verified Partners</p>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card">
+            <h4>@Model.Select(r => r.City).Distinct().Count()</h4>
+            <p>Cities Covered</p>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card">
+            <h4>@Model.Select(r => r.Category).Distinct().Count()</h4>
+            <p>Support Areas</p>
+        </div>
+    </div>
+</div>
+
+<div class="search-box">
+    <form method="get">
+        <label class="form-label">Search resources</label>
+
+        <input class="form-control-custom"
+               type="text"
+               name="searchTerm"
+               placeholder="Search by name, category, or city..." />
+
+        <br />
+
+        <button class="btn-main" type="submit">
+            Search
+        </button>
+    </form>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="empty-state">
+        <h3>No resources found</h3>
+        <p>Add a resource or adjust your search terms.</p>
+    </div>
+}
+else
+{
+    @foreach (var item in Model)
+    {
+        <div class="card-box">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h3>@item.Name</h3>
+
+                    @if (item.IsVerified)
+                    {
+                        <span class="verified-badge">Verified Partner</span>
+                    }
+                </div>
+
+                <span class="badge-category">
+                    @item.Category
+                </span>
+            </div>
+
+            <p class="mt-3">@item.Description</p>
+
+            <p>
+                <strong>City:</strong> @item.City
+            </p>
+
+            <p>
+                <strong>Hours:</strong> @item.Hours
+            </p>
+
+            <p>
+                <strong>Contact:</strong> @item.ContactInfo
+            </p>
+
+            <a class="btn-secondary-custom" href="/Resource/Details/@item.Id">
+                View Profile
+            </a>
+
+            <a class="btn-main" href="/Resource/Edit/@item.Id">
+                Edit
+            </a>
+
+            <a class="btn-danger-custom" href="/Resource/Delete/@item.Id">
+                Delete
+            </a>
+        </div>
+    }
+}
