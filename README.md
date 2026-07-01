@@ -1,5 +1,11 @@
 # Community Connect
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-MVC-blue?logo=dotnet)
+![C#](https://img.shields.io/badge/C%23-.NET-purple?logo=csharp)
+![SQL Server](https://img.shields.io/badge/SQL_Server-Database-red?logo=microsoftsqlserver)
+![Entity Framework Core](https://img.shields.io/badge/Entity_Framework_Core-ORM-green)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5-blueviolet?logo=bootstrap)
 
+Community Connect is a full-stack ASP.NET Core MVC web application that helps organizations manage and recommend trusted local community resources.
 Community Connect is a full-stack ASP.NET Core MVC web application that helps organizations manage and recommend trusted local community resources.
 
 ## 📸 Application Preview
