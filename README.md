@@ -160,6 +160,3 @@ The focus of this project was writing clean, maintainable code while applying so
 ## Author
 
 **Rahimeen Saleem**
-
-GitHub:
-https://github.com/RahimeenSaleem
