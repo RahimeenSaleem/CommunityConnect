@@ -12,23 +12,23 @@ Community Connect is a full-stack ASP.NET Core MVC web application that helps or
 
 ### Home Page
 
-![Home Page](home-page.png)
+![Home Page](Screenshots/home-page-png.png)
 
 ### Resource Dashboard
 
-![Resource Dashboard](resource-dashboard.png)
+![Resource Dashboard](Screenshots/resource-dashboard-png.png)
 
 ### Community Intake
 
-![Community Intake](community-intake.png)
+![Community Intake](Screenshots/community-intake-png.png)
 
-### Recommendation Results
+### AI Referral Recommendations
 
-![Recommendation Results](recommendation-results.png)
+![AI Referral Recommendations](Screenshots/recommendation-results-png.png)
 
-### Add Community Partner
+### Community Partner Management
 
-![Add Community Partner](add-partner.png)
+![Community Partner Management](Screenshots/add-partner-png.png)
 
 This project was built as a portfolio application to demonstrate practical backend and frontend development skills using the Microsoft .NET ecosystem. It showcases real-world CRUD operations, database integration with SQL Server, and a simple rule-based recommendation engine that assists staff in identifying appropriate community services.
 
