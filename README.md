@@ -35,7 +35,13 @@ https://youtu.be/wu-azJ6jPLE
 
 ### AI Referral Recommendations
 
-![AI Referral Recommendations](Screenshots/recommendation-results-png.png)
+#### AI Recommendation
+
+![AI Recommendation](Screenshots/recommendation-results-png.png)
+
+#### Matching Resources
+
+![Matching Resources](Screenshots/recommendation-results-png%20(2).png)
 
 ### Community Partner Management
 
