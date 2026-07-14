@@ -76,7 +76,11 @@
     else
     {
         <div class="page-header mt-4">
-            <h2>Recommended Support Areas</h2>
+            <h2>🤖 AI Recommendations</h2>
+
+            <p class="text-muted mb-3">
+                Generated from the client's intake information.
+            </p>
 
             @for (int i = 0; i < ViewBag.Categories.Count; i++)
             {
@@ -84,10 +88,6 @@
                     <span class="badge-category">
                         @ViewBag.Categories[i]
                     </span>
-
-                    <p>
-                        @ViewBag.Reasons[i]
-                    </p>
                 </div>
             }
         </div>
@@ -103,7 +103,7 @@
         }
         else
         {
-            <h2 class="mt-4 mb-3">Recommended Resources</h2>
+            <h2 class="mt-4 mb-3">Matching Resources</h2>
 
             @foreach (var item in ViewBag.MatchingResources)
             {

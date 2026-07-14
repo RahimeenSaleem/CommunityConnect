@@ -1,15 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CommunityResourceAssistant.Database;
+using CommunityResourceAssistant.Services;
 
 namespace CommunityResourceAssistant.Controllers
 {
     public class AiController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly GeminiService _geminiService;
 
-        public AiController(ApplicationDbContext context)
+        public AiController(
+            ApplicationDbContext context,
+            GeminiService geminiService)
         {
             _context = context;
+            _geminiService = geminiService;
         }
 
         public IActionResult Index()
@@ -18,66 +23,142 @@ namespace CommunityResourceAssistant.Controllers
         }
 
         [HttpPost]
-        public IActionResult Ask(string personType, string situation, string urgency, string details)
+        public async Task<IActionResult> Ask(
+            string personType,
+            string situation,
+            string urgency,
+            string details)
         {
             ViewBag.PersonType = personType;
             ViewBag.Situation = situation;
             ViewBag.Urgency = urgency;
             ViewBag.Details = details;
 
-            List<string> categories = new List<string>();
-            List<string> reasons = new List<string>();
+            string fullText =
+                ((situation ?? "") + " " + (details ?? "")).Trim();
 
-            string fullText = ((situation ?? "") + " " + (details ?? "")).ToLower();
+            List<string> categories = new();
+            List<string> reasons = new();
 
-            if (fullText.Contains("food") ||
-                fullText.Contains("groceries") ||
-                fullText.Contains("meal") ||
-                fullText.Contains("hungry"))
+            if (string.IsNullOrWhiteSpace(fullText))
             {
-                categories.Add("Food");
-                reasons.Add("Food support was recommended because the intake mentions food, groceries, meals, or hunger.");
+                ViewBag.Categories = categories;
+                ViewBag.Reasons = reasons;
+                ViewBag.MatchingResources =
+                    _context.Resources
+                        .Where(resource => false)
+                        .ToList();
+
+                ViewBag.RecommendationSource = "None";
+                ViewBag.GeminiDiagnostic =
+                    "No client situation was entered.";
+
+                return View("Index");
             }
 
-            if (fullText.Contains("rent") ||
-                fullText.Contains("housing") ||
-                fullText.Contains("shelter") ||
-                fullText.Contains("eviction"))
+            // Try Gemini first.
+            List<GeminiMatch> geminiMatches =
+                await _geminiService.MatchCategoriesAsync(fullText);
+
+            // Temporary debugging information.
+            ViewBag.GeminiDiagnostic =
+                _geminiService.LastDiagnostic;
+
+            if (geminiMatches.Count > 0)
             {
-                categories.Add("Housing");
-                reasons.Add("Housing support was recommended because the intake mentions rent, housing, shelter, or eviction concerns.");
+                categories = geminiMatches
+                    .Where(match =>
+                        !string.IsNullOrWhiteSpace(match.Category))
+                    .Select(match => match.Category.Trim())
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                reasons = geminiMatches
+                    .Where(match =>
+                        !string.IsNullOrWhiteSpace(match.Category))
+                    .Select(match =>
+                        string.IsNullOrWhiteSpace(match.Reason)
+                            ? "Gemini identified this category based on the client's situation."
+                            : match.Reason.Trim())
+                    .ToList();
+
+                ViewBag.RecommendationSource = "Gemini";
+            }
+            else
+            {
+                // Original keyword fallback.
+                string lowerText = fullText.ToLowerInvariant();
+
+                if (lowerText.Contains("food") ||
+                    lowerText.Contains("groceries") ||
+                    lowerText.Contains("meal") ||
+                    lowerText.Contains("hungry"))
+                {
+                    categories.Add("Food");
+
+                    reasons.Add(
+                        "Food support was recommended because the intake mentions food, groceries, meals, or hunger.");
+                }
+
+                if (lowerText.Contains("rent") ||
+                    lowerText.Contains("housing") ||
+                    lowerText.Contains("shelter") ||
+                    lowerText.Contains("eviction") ||
+                    lowerText.Contains("homeless"))
+                {
+                    categories.Add("Housing");
+
+                    reasons.Add(
+                        "Housing support was recommended because the intake mentions rent, housing, shelter, eviction, or homelessness.");
+                }
+
+                if (lowerText.Contains("job") ||
+                    lowerText.Contains("work") ||
+                    lowerText.Contains("employment") ||
+                    lowerText.Contains("resume") ||
+                    lowerText.Contains("laid off"))
+                {
+                    categories.Add("Employment");
+
+                    reasons.Add(
+                        "Employment support was recommended because the intake mentions job loss, work, employment, or resume assistance.");
+                }
+
+                if (lowerText.Contains("doctor") ||
+                    lowerText.Contains("health") ||
+                    lowerText.Contains("clinic") ||
+                    lowerText.Contains("medicine") ||
+                    lowerText.Contains("medical"))
+                {
+                    categories.Add("Healthcare");
+
+                    reasons.Add(
+                        "Healthcare support was recommended because the intake mentions health, medical care, clinics, doctors, or medicine.");
+                }
+
+                if (lowerText.Contains("legal") ||
+                    lowerText.Contains("lawyer") ||
+                    lowerText.Contains("court") ||
+                    lowerText.Contains("rights") ||
+                    lowerText.Contains("attorney"))
+                {
+                    categories.Add("Legal Aid");
+
+                    reasons.Add(
+                        "Legal aid was recommended because the intake mentions legal help, lawyers, court, attorneys, or rights concerns.");
+                }
+
+                ViewBag.RecommendationSource =
+                    categories.Count > 0
+                        ? "Keyword fallback"
+                        : "No recommendation";
             }
 
-            if (fullText.Contains("job") ||
-                fullText.Contains("work") ||
-                fullText.Contains("employment") ||
-                fullText.Contains("resume"))
-            {
-                categories.Add("Employment");
-                reasons.Add("Employment support was recommended because the intake mentions job loss, work, employment, or resume help.");
-            }
-
-            if (fullText.Contains("doctor") ||
-                fullText.Contains("health") ||
-                fullText.Contains("clinic") ||
-                fullText.Contains("medicine"))
-            {
-                categories.Add("Healthcare");
-                reasons.Add("Healthcare support was recommended because the intake mentions health, medical care, clinics, doctors, or medicine.");
-            }
-
-            if (fullText.Contains("legal") ||
-                fullText.Contains("lawyer") ||
-                fullText.Contains("court") ||
-                fullText.Contains("rights"))
-            {
-                categories.Add("Legal Aid");
-                reasons.Add("Legal aid was recommended because the intake mentions legal help, lawyers, court, or rights concerns.");
-            }
-
-            var matchingResources = _context.Resources
-                .Where(r => categories.Contains(r.Category))
-                .ToList();
+            var matchingResources =
+                _context.Resources
+                    .Where(resource =>
+                        categories.Contains(resource.Category))
+                    .ToList();
 
             ViewBag.Categories = categories;
             ViewBag.Reasons = reasons;
