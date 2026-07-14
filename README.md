@@ -41,7 +41,7 @@ https://youtu.be/wu-azJ6jPLE
 
 #### Matching Resources
 
-![Matching Resources](Screenshots/recommendation-results-png%20(2).png)
+![Matching Resources](Screenshots/recommendation-results-png%20%282%29.png)
 
 ### Community Partner Management
 
